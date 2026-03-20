@@ -1,51 +1,23 @@
 #![no_std]
-
-use soroban_sdk::{contract, contractimpl, symbol_short, Env, Symbol, Address, Map};
-
-// Storage key
-const REPUTATION: Symbol = symbol_short!("REP");
+use soroban_sdk::{contract, contractimpl, vec, Env, String, Vec};
 
 #[contract]
-pub struct ReputationContract;
+pub struct Contract;
 
+// This is a sample contract. Replace this placeholder with your own contract logic.
+// A corresponding test example is available in `test.rs`.
+//
+// For comprehensive examples, visit <https://github.com/stellar/soroban-examples>.
+// The repository includes use cases for the Stellar ecosystem, such as data storage on
+// the blockchain, token swaps, liquidity pools, and more.
+//
+// Refer to the official documentation:
+// <https://developers.stellar.org/docs/build/smart-contracts/overview>.
 #[contractimpl]
-impl ReputationContract {
-
-    // Initialize reputation map
-    pub fn init(env: Env) {
-        let map: Map<Address, i32> = Map::new(&env);
-        env.storage().instance().set(&REPUTATION, &map);
-    }
-
-    // Add reputation to a user
-    pub fn add_rep(env: Env, user: Address, amount: i32) {
-        let mut map: Map<Address, i32> =
-            env.storage().instance().get(&REPUTATION).unwrap();
-
-        let current = map.get(user.clone()).unwrap_or(0);
-        let updated = current + amount;
-
-        map.set(user, updated);
-        env.storage().instance().set(&REPUTATION, &map);
-    }
-
-    // Deduct reputation
-    pub fn subtract_rep(env: Env, user: Address, amount: i32) {
-        let mut map: Map<Address, i32> =
-            env.storage().instance().get(&REPUTATION).unwrap();
-
-        let current = map.get(user.clone()).unwrap_or(0);
-        let updated = current - amount;
-
-        map.set(user, updated);
-        env.storage().instance().set(&REPUTATION, &map);
-    }
-
-    // Get reputation of a user
-    pub fn get_rep(env: Env, user: Address) -> i32 {
-        let map: Map<Address, i32> =
-            env.storage().instance().get(&REPUTATION).unwrap();
-
-        map.get(user).unwrap_or(0)
+impl Contract {
+    pub fn hello(env: Env, to: String) -> Vec<String> {
+        vec![&env, String::from_str(&env, "Hello"), to]
     }
 }
+
+mod test;
